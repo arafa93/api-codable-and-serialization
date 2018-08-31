@@ -87,21 +87,27 @@ class ViewController: UIViewController {
         
         let task = URLSession.shared.dataTask(with: request) { (data, success, error) in
             
-            do{
+            if error == nil {
                 
-                let jsonResponse = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String:Any]
-                
-                
-                completed()
-                
-                DispatchQueue.main.async {
-                    print("this is my Json " , jsonResponse)
+                do{
+                    
+                    guard let data = data else {return}
+                    
+                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:Any]
+                    
+                    
+                    DispatchQueue.main.async {
+                        print("this is my Json " , jsonResponse)
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                    
+                }catch{
+                    print(error)
                 }
-                
-            }catch{
-                print(error)
+            }else{
+                print(error as Any)
             }
- 
+            
         }
         task.resume()
         
